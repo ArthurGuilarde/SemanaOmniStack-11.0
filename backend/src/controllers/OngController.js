@@ -1,0 +1,29 @@
+const crypto = require('crypto');
+const connection = require('../database/connection.js');
+
+module.exports = {
+
+    async index(request, response)  {
+        const ongs = await connection('ongs').select('*');
+    
+        return  response.json(ongs);
+    },
+
+    async create(request, response) {
+        const { name, email, wpp, city, uf } = request.body;
+
+        const id = crypto.randomBytes(4).toString('HEX');
+
+        await connection('ongs').insert({
+            id,
+            name,
+            email,
+            wpp,
+            city,
+            uf,
+        });
+
+
+        return response.json({ id });
+    }
+};
